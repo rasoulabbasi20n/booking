@@ -1,2 +1,2 @@
 # booking
-booking solution for generic domain
+Booking solution for a generic Booking domain
