@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="7.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\framework\Framework.Application\Framework.Application.csproj" />
+    <Folder Include="Handlers\" />
+    <Folder Include="Requests\" />
   </ItemGroup>
 
 </Project>

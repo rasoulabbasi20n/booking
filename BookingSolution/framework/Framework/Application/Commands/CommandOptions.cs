@@ -2,5 +2,6 @@
 {
     public record CommandOptions
     {
+        public string TransactionIsolationLevel { get; set; }
     }
 }

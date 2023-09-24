@@ -1,34 +1,32 @@
-﻿using Autofac;
-using Framework.Application.Commands;
-using Framework.Application.Events;
+﻿using Framework.Application.Events;
 using Framework.Domain;
 using Framework.Problems;
 
-namespace Framework.Autofac
+namespace Framework.Application.Commands
 {
-    public class AutofacCommandBus : ICommandBus
+    public abstract class CommandBusBase : ICommandBus
     {
-        private readonly ILifetimeScope _scope;
         private readonly ILoggingService _logger;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IDomainEventBus _domainEventBus;
 
-        public AutofacCommandBus(ILifetimeScope scope, ILoggingService logger, IDomainEventBus domainEventBus)
+        protected CommandBusBase(ILoggingService logger, IUnitOfWork unitOfWork, IDomainEventBus domainEventBus)
         {
-            _scope = scope;
             _logger = logger;
+            _unitOfWork = unitOfWork;
             _domainEventBus = domainEventBus;
         }
 
-        public async Task<ClientResponse> Send<TCommand>(TCommand command, CommandOptions commandOptions = default, CancellationToken token = default)
+        public async Task<ClientResponse> Send<TCommand>(TCommand command, CommandOptions commandOptions = null, CancellationToken cancellationToken = default)
         {
             try
             {
-                var handler = _scope.Resolve<ICommandHandler<TCommand>>();
-                var commandResult = await handler.Execute(command, token);
+                var handler = ResolveHandler<TCommand>();
+                var commandResult = await handler.Execute(command, cancellationToken);
 
                 if (commandResult.Success)
                 {
-                    await ProcessEvents(commandResult, token);
+                    await CommitAndProcessEvents(commandResult, cancellationToken);
                     return ClientResponse.CreateSuccess();
                 }
 
@@ -42,16 +40,16 @@ namespace Framework.Autofac
             }
         }
 
-        public async Task<ClientResponse<TResult>> SendAndReply<TCommand, TResult>(TCommand command, CommandOptions commandOptions = default, CancellationToken token = default)
+        public async Task<ClientResponse<TResult>> SendAndReply<TCommand, TResult>(TCommand command, CommandOptions commandOptions = null, CancellationToken cancellationToken = default)
         {
             try
             {
-                var handler = _scope.Resolve<ICommandHandler<TCommand, TResult>>();
-                var commandResult = await handler.Execute(command, token);
+                var handler = ResolveHandler<TCommand, TResult>();
+                var commandResult = await handler.Execute(command, cancellationToken);
 
                 if (commandResult.Success)
                 {
-                    await ProcessEvents(commandResult, token);
+                    await CommitAndProcessEvents(commandResult, cancellationToken);
                     return ClientResponse<TResult>.CreateSuccess(commandResult.Result!);
                 }
 
@@ -65,10 +63,16 @@ namespace Framework.Autofac
             }
         }
 
-        private async Task ProcessEvents(CommandResult result, CancellationToken token)
+        protected abstract ICommandHandler<TCommand> ResolveHandler<TCommand>();
+        protected abstract ICommandHandler<TCommand, TResult> ResolveHandler<TCommand, TResult>();
+
+        private async Task CommitAndProcessEvents(CommandResult result, CancellationToken token)
         {
             var appEvents = new List<IApplicationEvent>(result.RaisedApplicationEvents);
             appEvents.AddRange(await ProcessDomainEvents(result.RaisedDomainEvents, token));
+
+            await _unitOfWork.Commit(token);
+
             await SendApplicationEvents(appEvents, token);
         }
 

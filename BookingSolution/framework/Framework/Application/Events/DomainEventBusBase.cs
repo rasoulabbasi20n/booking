@@ -1,25 +1,21 @@
-﻿using Autofac;
-using Framework.Application.Events;
-using Framework.Domain;
+﻿using Framework.Domain;
 
-namespace Framework.Autofac
+namespace Framework.Application.Events
 {
-    public class AutofacEventBus : IDomainEventBus
+    public abstract class DomainEventBusBase : IDomainEventBus
     {
-        private readonly ILifetimeScope _scope;
-        private readonly ILoggingService _logger;
+        private readonly ILoggingService _loggerService;
 
-        public AutofacEventBus(ILifetimeScope scope, ILoggingService logger)
+        protected DomainEventBusBase(ILoggingService logger)
         {
-            _scope = scope;
-            _logger = logger;
+            _loggerService = logger;
         }
 
         public async Task<IApplicationEvent[]> Publish<T>(T @event, CancellationToken cancellationToken = default) where T : IDomainEvent
         {
             try
             {
-                var handlers = _scope.Resolve<IEnumerable<IDomainEventHandler<T>>>();
+                var handlers = ResolveHandlers<T>();
                 var appEvents = new List<IApplicationEvent>();
                 foreach (var handler in handlers)
                     appEvents.AddRange(await handler.Handle(@event, cancellationToken));
@@ -30,7 +26,7 @@ namespace Framework.Autofac
             {
                 try
                 {
-                    _logger.Error(ex);
+                    _loggerService.Error(ex);
                 }
                 catch
                 {
@@ -40,5 +36,7 @@ namespace Framework.Autofac
                 throw;
             }
         }
+
+        protected abstract IEnumerable<IDomainEventHandler<T>> ResolveHandlers<T>() where T : IDomainEvent;
     }
 }

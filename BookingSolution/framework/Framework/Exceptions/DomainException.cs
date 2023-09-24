@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Framework.Gaurds
+﻿namespace Framework.Gaurds
 {
     public class DomainException : Exception
     {
