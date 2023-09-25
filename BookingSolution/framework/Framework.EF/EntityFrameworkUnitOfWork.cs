@@ -2,10 +2,10 @@
 
 namespace Framework.EF
 {
-    public class EntityFrameworkUnitOfWork : IUnitOfWork
-    {
-        public Task Commit(CancellationToken cancellationToken)
-        {
-        }
-    }
+    //public class EntityFrameworkUnitOfWork : IUnitOfWork
+    //{
+    //    public Task Commit(CancellationToken cancellationToken)
+    //    {
+    //    }
+    //}
 }
