@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Booking.Query", "src\Bookin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Framework.Autofac", "framework\Framework.Autofac\Framework.Autofac.csproj", "{C5F97C73-C7EC-49A7-976C-2BF1A9158F26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.EF", "framework\Framework.EF\Framework.EF.csproj", "{0C7C8C0B-71AA-406C-B07C-F022E86D4858}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{C5F97C73-C7EC-49A7-976C-2BF1A9158F26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5F97C73-C7EC-49A7-976C-2BF1A9158F26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5F97C73-C7EC-49A7-976C-2BF1A9158F26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C7C8C0B-71AA-406C-B07C-F022E86D4858}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C7C8C0B-71AA-406C-B07C-F022E86D4858}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C7C8C0B-71AA-406C-B07C-F022E86D4858}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C7C8C0B-71AA-406C-B07C-F022E86D4858}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{A843A5EE-94F4-4C3C-889C-100B642C88C8} = {953B3FD8-0F1A-4F59-A5EC-A4CF15A93DE0}
 		{0E165822-8AE6-409E-8BEA-C50CE4F8E701} = {953B3FD8-0F1A-4F59-A5EC-A4CF15A93DE0}
 		{C5F97C73-C7EC-49A7-976C-2BF1A9158F26} = {78261324-CA71-4AE7-B939-29BFBEB94D82}
+		{0C7C8C0B-71AA-406C-B07C-F022E86D4858} = {78261324-CA71-4AE7-B939-29BFBEB94D82}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FD0335D0-4C0B-49B0-9FF0-A6050E29D006}
